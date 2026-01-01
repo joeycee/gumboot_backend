@@ -1,0 +1,302 @@
+<%-include('../common/header');-%>
+<%-include('../common/sidebar');-%>
+
+<!-- Main Content -->
+  <div class="main-content">
+    <div class="form-group col-12"> 
+    <section class="section">
+      <div class="section-header">
+        <h1> Add Worker</h1>
+      </div>
+      <div class="card ">
+        <div class="card-body">
+          <form action="/Create_Worker" method="post" id="addForm" enctype="multipart/form-data" >
+            <div class="row">
+              <div class="form-group col-6 floating-addon">
+                <label for="name">First Name</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-user"></i>
+                    </div>
+                  </div>
+                  </div>
+                <input id="name" type="text" class="form-control" name="firstname" placeholder="First Name"required>
+              </div>
+              <div class="form-group col-6 floating-addon">
+                <label for="name">Last Name</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-user"></i>
+                    </div>
+                  </div>
+                  </div>
+                <input id="name" type="text" class="form-control" name="lastname" placeholder="Last Name"required>
+              </div>
+              <div class="form-group col-12 floating-addon">
+                <label for="name">Category Name</label>
+                  <select name="categoryId" id="" class="form-control">
+                    <option >Select Category</option>
+                    <%category.forEach(function(data,i) { %>
+                    <option value="<%=data.id%>"><%=data.name%></option>
+                    <%})%>
+                  </select>
+                </div>
+               <div class="form-group col-12 floating-addon">
+              <label for="email">Email</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <i class="fas fa-envelope"></i>
+                  </div>
+                </div>
+                </div>
+              <input id="email" type="text" class="form-control" name="email" placeholder="Email"required>
+               </div>
+                <div class="form-group col-12 floating-addon">
+                <label for="password" class="d-block">Password</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-key"></i>
+                    </div>
+                  </div>
+                  </div>
+                <input id="password" type="password" class="form-control pwstrength" data-indicator="pwindicator" name="password" placeholder="Password" required>
+                <div id="pwindicator" class="pwindicator">
+                </div>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label>Phone</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-phone"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input type="text" class="form-control" name="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="12" placeholder="Phone" required>
+                </div>  
+                 <!-- <div class="form-group col-12 floating-addon">
+                  <label>Location </label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-map-marker"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input id="location" type="text" class="form-control" name="location" placeholder="Enter your location"required>
+                </div>     -->
+              
+                <div class="form-group col-12 floating-addon">
+                  <label>Bio </label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-pen"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input id="bio" type="text" class="form-control" name="bio" placeholder="Enter your location"required>
+                </div>
+                <!-- <div class="form-group col-6 floating-addon">
+                  <label>Account Name </label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-user"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input for="accountname" type="text" class="form-control" name="account_name" placeholder="Enter your bank name"required>
+                </div>  -->
+                <!-- <div class="form-group col-6 floating-addon">
+                  <label>Bank Name </label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-building"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input id="name" type="text" class="form-control" name="bank_name" placeholder="Enter your bank name"required>
+                </div>  -->
+                <!-- <div class="form-group col-6 floating-addon">
+                  <label>Account Number </label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-calculator"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input id="name" type="text" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="16" name="account_number" placeholder="Enter your account number"required>
+                </div>                -->
+              <div class="form-group col-6">
+                <label> Upload Image </label>
+                <input type="file" name="image" accept="image/*" value="" id="imgInp" class="form-control" required>
+              </div> 
+              <div class="form-group col-6">
+                <label> Upload ID  </label>
+                <input type="file" name="idproof" accept="image/*" value="" id="imgInp" class="form-control" required>
+              </div> 
+             
+            </div> <br>
+              <button type="submit" class="btn btn-info" >
+                Submit
+              </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+ 
+
+
+<%- include('../common/footer'); -%>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+          firstname: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          lastname: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          email: {
+            required: true,
+            noSpace: true,
+            emailExt: true,
+          },
+          password: {
+            required: true,
+            noSpace: true,
+            minlength: 5,
+            maxlength: 12
+          },
+          accountname: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          bankname: {
+            required: true,
+            noSpace: true,
+            maxlength: 12
+          },
+          phone: {
+            digits: true,
+            required: true,
+            noSpace: true,
+            minlength: 10,
+            maxlength: 12
+          },
+          location: {
+            required: true,
+            noSpace: true,
+            maxlength: 100
+          },
+          bio: {
+            required: true,
+            noSpace: true,
+            maxlength: 50
+          },
+          image: {
+            required: true,
+            noSpace: true
+          },
+          
+        },
+        messages: {
+
+          firstname: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "First name should be 10 charcater"
+          },
+
+          lastname: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Last name should be 10 charcater"
+          },
+
+          email: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+           
+          },
+          phone: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Phone number should be 12 charcater"
+          },
+          location: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "First name should be 100 charcater"
+          },
+          bio: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "First name should be 40 charcater"
+          },
+          image: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+          },
+          accountname: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+          },
+          bankname: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+          },
+          location: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+          },
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

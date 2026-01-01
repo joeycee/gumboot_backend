@@ -1,0 +1,209 @@
+<%-include('../common/header');-%>
+<%-include('../common/sidebar');-%>
+
+<!-- Main Content -->
+  <div class="main-content">
+    <div class="form-group col-12"> 
+      <section class="section">
+        <div class="section-header">
+          <h1> Add Job</h1>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <form action="/create_job" id="addForm" enctype="multipart/form-data" method="post">
+              <div class="row">
+                <div class="form-group col-12 floating-addon">
+                  <label for="name">Job Title</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-user"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input id="title" type="text" class="form-control" name="job_title" placeholder="Title"required>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label for="name">Job Type</label>
+                    <select name="job_type" id="" class="form-control">
+                      <option >Select job type</option>
+                      <%job_type.forEach(function(data,i) { %>
+                          <option value="<%=data.id%>"><%=data.name%></option>
+                          <%})%>
+                    </select>
+                  </div>
+                <div class="form-group col-6 floating-addon">
+                  <label for="password" class="d-block">Estimated Time</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-clock"></i>
+                      </div>
+                    </div>
+                  </div>
+                    <input id="estdtime" type="text" class="form-control" name="est_time" placeholder="Estimated Time"required>
+                </div>
+                <div class="form-group col-6 floating-addon">
+                  <label for="password" class="d-block">Expiry Date</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-table"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input id="expdate" type="date" class="form-control" name="exp_date" placeholder="Expiry Date" required max="9999-12-31">
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label for="" class="d-block">Description</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-pen"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input type="text" class="form-control" name="description" placeholder="Description"required>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label for="name">Address</label>
+                    <select name="address" id="" class="form-control">
+                      <option >Select job type</option>
+                      <%address.forEach(function(data,i) { %>
+                          <option value="<%=data.id%>"><%=data.location%></option>
+                          <%})%>
+                    </select>
+                  </div>
+                   
+                <div class="form-group col-6 floating-addon">
+                  <label class="d-block">Price</label>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <i class="fas fa-dollar-sign"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <input type="text" class="form-control" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" placeholder="Description"required>
+                </div>
+                <div class="form-group col-6">
+                  <label> Upload ID </label>
+                  <input type="file" name="image" accept="image/*" value="" id="imgInp" class="form-control">
+                </div> 
+              </div> <br>
+                <button type="submit" class="btn btn-info" >
+                Submit
+              </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+ 
+
+<%- include('../common/footer'); -%>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+          
+          job_title: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          job_type: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          est_time: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          exp_date: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          description: {
+            required: true,
+            noSpace: true,
+            maxlength: 50
+          },
+          price: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+        },
+        messages: {
+
+          job_title: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Title should be 20 charcater"
+          },
+          job_type: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Job type should be 20 charcater"
+          },
+          est_time: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: " Estimated time should be 10 charcater"
+          },
+          exp_date: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Date should be 10 charcater"
+          },
+          description: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Description should be 50 charcater"
+          },
+          price: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Price should be 10 charcater"
+          },
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>
+

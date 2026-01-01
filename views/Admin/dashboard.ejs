@@ -1,0 +1,199 @@
+<%- include('common/header'); -%>
+<%- include('common/sidebar'); -%>
+
+
+<!-- Main Content -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Dashboard</h1>
+      <div class="section-header-breadcrumb">
+        <h5>Total Admin Commission: $ <%=adminwallet.toFixed(2)%>  </h5> 
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/user_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-cyan">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b> Employer</b></h4>
+              </div>
+              <div class="card-body">
+                <%=user%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/job_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-primary">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Jobs</b></h4>
+              </div>
+              <div class="card-body">
+                <%=jobs%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/category_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-warning">
+              <i class="fas fa-list"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Category</b></h4>
+              </div>
+              <div class="card-body">
+                <%=category%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/contact_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-dark">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Messages</b></h4>
+              </div>
+              <div class="card-body">
+                <%=messages%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/worker_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-info">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Worker</b></h4>
+              </div>
+              <div class="card-body">
+                <%=worker%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div> -->
+     
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/bookingsList">
+          <div class="card card-statistic-1">
+            <div class="card-icon">
+              <i class="fas fa-table"></i>
+            </div>  
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Bookings</b></h4>
+              </div>
+              <div class="card-body">
+                <%=booking%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/withdraw_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-primary">
+              <i class="fas fa-wallet" ></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Withdrawals</b></h4>
+              </div>
+              <div class="card-body">
+                <%=withdrawals%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      
+     
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/faq_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-info">
+              <i class="fas fa-question"></i>
+            </div>  
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>FAQ</b></h4>
+              </div>
+              <div class="card-body">
+               <%=FAQ%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/Tools_listing">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-secondary">
+              <i class="fas fa-tools"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b>Tools</b></h4>
+              </div>
+              <div class="card-body">
+                <%=tools%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div> -->
+      <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+        <a href="/report_list">
+          <div class="card card-statistic-1">
+            <div class="card-icon bg-dark">
+              <i class="fas fa-file"></i>
+            </div>
+            <div class="card-wrap">
+              <div class="card-header">
+                <h4><b> Reports</b></h4>
+              </div>
+              <div class="card-body">
+              <%=reports%>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>
+<%- include('common/footer'); -%>
+
+<script>
+  setTimeout(function () {
+    $("div.msg").fadeOut();
+  }, 2000);
+</script>
+

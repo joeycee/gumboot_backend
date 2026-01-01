@@ -1,0 +1,157 @@
+<%-include('../common/header');-%>
+<%-include('../common/sidebar');-%>
+
+<!-- Main Content -->
+  <div class="main-content">
+    <div class="form-group col-12"> 
+    <section class="section">
+      <div class="section-header">
+        <h1> Add User</h1>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <form action="/Create_category" id="addForm" enctype="multipart/form-data" method="post">
+            <div class="row">
+              <div class="form-group col-10 floating-addon">
+                <label for="name">Category Name</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <div class="input-group-text">
+                      <i class="fas fa-user"></i>
+                    </div>
+                  </div>
+                </div>
+                <input id="name" type="text" class="form-control" name="name" placeholder="Title"required>
+              </div>
+              <div class="form-group col-6" style="margin-top: 15px;" >
+                <label> Upload Image </label>
+                <input type="file" name="image" accept="image/*" value="" id="imgInp" class="form-control">
+              </div> 
+              </div> <br>
+                <button type="submit" class="btn btn-info" >
+                Submit
+              </button>
+          </form>
+        </div>
+      </div>
+  </section>
+</div>
+</div>
+ 
+
+<%- include('../common/footer'); -%>
+
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+          
+          title: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          jobtype: {
+            required: true,
+            noSpace: true,
+            maxlength: 15
+          },
+          estmdtime: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          expdate: {
+            required: true,
+            noSpace: true,
+            maxlength: 15
+          },
+          description: {
+            required: true,
+            noSpace: true,
+            maxlength: 40
+          },
+          address: {
+            required: true,
+            noSpace: true,
+            maxlength: 30
+          },
+          price: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+        },
+        messages: {
+
+          title: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Title should be 20 charcater"
+          },
+          jobtype: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Job type should be 15 charcater"
+          },
+          estmdtime: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: " Estimated time should be 15 charcater"
+          },
+          expdate: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Date should be 15 charcater"
+          },
+          address: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Address should be 20 charcater"
+          },
+          description: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Description should be 50 charcater"
+          },
+          price: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Price should be 10 charcater"
+          },
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>
+

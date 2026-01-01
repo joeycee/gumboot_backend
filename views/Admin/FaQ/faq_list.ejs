@@ -1,0 +1,152 @@
+<%-include('../common/header');-%>
+<%-include('../common/sidebar');-%>
+
+ <div class="main-content">
+      <section class="section">
+        <div class="section-header">
+          <h1> FaQ List</h1>
+          <div class="section-header-breadcrumb">
+            <a href="/add_faq" class="btn btn-sm " style="background-color: #07a3c0;" ><i class="fa fa-plus"> Add Faq </i></a>
+            </div>
+        </div>
+        <div class="section-body">
+          <div class="col-12 col-md-6 col-lg-12">
+            <div class="table-responsive">
+              <table id="myTable" class="table table-bordered table-hover table-md">
+                <thead>
+                    <tr style="background-color: #ebf2f2;" >
+                        <th scope="col">S No.</th>
+                        <th scope="col">Questions</th>
+                        <th scope="col">Answers</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                </thead>
+                <tbody>
+                    <%listing.forEach(function(data,i) {%>
+                        <tr>
+                          <td> <%=1+i%></td>
+                          <td> <%=data.question%></td>
+                          <td> <%=data.answer%></td>                       
+                          <td>
+                            <a href="/view_faq/<%=data._id%>" class="btn btn-sm bg-info"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            <a href="/edit_faq/<%=data._id%>" class="btn btn-sm bg-warning"><i class="fas fa-edit"></i></a>
+                            <button onclick="confirmDelete('<%=data._id%>')" class="btn btn-sm bg-danger"> <i class="fa fa-trash"></i> </button>
+                          </td>
+                        </tr>
+                    <%}) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+</script>
+
+<script>
+  setTimeout(function () {
+    $("div.msg").fadeOut();
+  }, 2000);
+</script>
+
+<script>
+  $(document).ready(function () {
+    // alert("ready!");
+  });
+
+  function confirmDelete(id) {
+    console.log(">>>>>>>>done>>>>>>>>>>", id)
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-success'
+      },
+      buttonsStyling: true
+      
+    })
+
+    // console.log("------------------------------result------", id);
+
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((isConfirm) => {
+      // console.log(isConfirm)
+      // return
+      if (isConfirm.isConfirmed) {
+        // alert('asd')
+        $.ajax({
+          url: "/delete_faq/:id",
+          type: 'delete',
+          data: {
+            id: id
+          },
+          success: function (result) { }
+        });
+        swalWithBootstrapButtons.fire(
+          'Deleted!',
+          'The user has been deleted .',
+          'success'
+        ).then(() => {
+          location.reload();
+        })
+      } else {
+        swalWithBootstrapButtons.fire(
+          'Cancelled',
+          'The user is safe :)',
+          'error'
+        )
+      }
+    })
+
+  }
+</script>
+
+
+<script>
+  const changeStatus = (val) => {
+    console.log(val)
+    let id = val.getAttribute('data-id')
+    let value = val.getAttribute('value')
+    let elemID = val.getAttribute('id')
+    elemID = document.getElementById(elemID)
+
+    $.ajax({
+      type: "post",
+      url: "/category_status",
+      data: {
+        id: id,
+        value: value
+
+      },
+      success: function (data) {
+        if (data) {
+          elemID.setAttribute('value', 0)
+          elemID.innerText = `Active`
+          elemID.classList.remove('btn-danger')
+          elemID.classList.add('btn-success')
+        } else {
+          elemID.setAttribute('value', 1)
+          elemID.innerText = `IN-Active`
+          elemID.classList.remove('btn-success')
+          elemID.classList.add('btn-danger')
+        }
+        window.location.reload();
+      }
+    });
+  }
+
+</script>

@@ -1,0 +1,44 @@
+<%-include('../common/header');-%>
+<%-include('../common/sidebar');-%>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="form-group col-12"> 
+        <section class="section">
+            <div class="section-header">
+                <h1> Add User</h1>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/create_review" enctype="multipart/form-data" method="post">
+                        <div class="row">
+                            <div class="form-group col-12 ">
+                                <label for="name">Employee ID</label>
+                                <input id="name" type="text" class="form-control" name="userId" placeholder="Rating"required>
+                            </div>
+                            <div class="form-group col-12 ">
+                                <label for="name">Worker ID</label>
+                                <input id="name" type="text" class="form-control" name="workerId" placeholder="Rating"required>
+                            </div>
+                            <div class="form-group col-12 ">
+                                <label for="name">Rating</label>
+                                <input id="name" type="text" class="form-control" name="rating" placeholder="Rating"required>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="name">Comment</label>
+                                <input id="name" type="text" class="form-control" name="comment" placeholder="Comment"required>
+                            </div>
+                        </div>   
+                        <button type="submit" class="btn btn-info" >
+                            Submit
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+ 
+
+<%- include('../common/footer'); -%>
+

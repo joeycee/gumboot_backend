@@ -1,0 +1,73 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1> Completed Jobs List</h1>
+    
+    </div>
+    <div class="section-body">
+      <div class="col-12 col-md-6 col-lg-12">
+        <div class="row">
+         
+          <div class="table-responsive  mt-3">
+            <table id="myTable" class="table table-hover table-md">
+              <thead>
+                <tr style="background-color: #ebf2f2;" >
+                  <th scope="col">S No.</th>
+                  <th scope="col">Employee</th>
+                  <th scope="col">Job Type</th>
+                  <th scope="col">Worker</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Job Status</th>
+                </tr>
+              </thead>
+              <tbody class="table_data">
+                <% if(bookingdata.length != 0){%>
+                  <% bookingdata.forEach(function(data,i) { %>
+                    <tr>
+                      <td><%=1+i%></td>
+                      <td><%=data.userId ? data.userId.firstname : "User not available" %></td>
+                      <td><%=data.job_type ? data.job_type.name : "" %></td>
+                      <td><%=data.workerId ? data.workerId.firstname : "worker not assigned" %></td>
+                     
+                      <td>
+                        <img src="<%=data.image%>" width="45px" height="40px" type="submit" style="cursor:pointer;">
+                      </td>
+                      <td>
+                      
+                          <option value="7" <% if(data.job_status == 7) { %> selected <% } %>> Completed</option>
+
+                        </select>
+                      </td>
+                    
+                    </tr>
+                  <%})%>
+                <%}%>
+              </tbody>
+              <tbody class="append_tbody">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+
+  setTimeout(function () {
+    $("div.msg").fadeOut();
+  }, 2000);
+</script>
+
+

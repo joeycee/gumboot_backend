@@ -1,0 +1,127 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Update details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="/update_faq" id="addForm" method="post" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-12 offset-lg-0 ">
+              <div class="card-body">
+                <div class="form-group col-12 floating-addon">
+                  <label> Question</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-question"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="question" value="<%=editData.question%>" required>
+                    <input type="hidden" name="id" value="<%=editData._id%>">
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label> Answer</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-book"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <textarea class="form-control"  name="answer"  value="" data-height="100" required><%=editData.answer%></textarea>
+                    <div class="invalid-feedback">
+                        Please fill in the email
+                    </div>
+                </div>
+                <br>
+                  <div class="form-group">
+                    <div class="col-sm-12 col-md-12">
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+
+          question: {
+            noSpace: true,
+            required: true,
+          },
+          answer: {
+            noSpace: true,
+            required: true,
+          },
+        
+        },
+        messages: {
+
+          question: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+          },
+          answer: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+          },         
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

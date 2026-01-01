@@ -1,0 +1,177 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Update details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="/update_category" id="addForm" method="post" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-4">
+              <div class="card profile-widget">
+                <div class="profile-widget-header text-center py-3">
+                  <img alt="image" width="200" height="200" id="blah" src="<%=editData.image%>" class="profile_img rounded-circle">
+                </div>
+                <div class="form-group col-12">
+                  <label> Update profile picture </label>
+                  <input type="file" name="image" accept="image/*" value="" id="imgInp" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-7 offset-lg-0 ">
+              <div class="card-body">
+                <div class="form-group col-12">
+                  <label> Category Name</label>
+                    <!-- <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                    </div> -->
+                    <input type="text" class="form-control" name="name" value="<%=editData.name%>" required>
+                    <input type="hidden" name="id" value="<%=editData._id%>">
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                </div>
+            
+                  <div class="form-group">
+                    <div class="col-sm-12 col-md-12">
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+
+          title: {
+            noSpace: true,
+            required: true,
+            maxlength: 15
+          },
+          jobtype: {
+            noSpace: true,
+            required: true,
+            maxlength: 15
+          },
+          estmdtime: {
+            noSpace: true,
+            required: true,
+            maxlength: 10
+          },
+          expdate: {
+            noSpace: true,
+            required: true,
+            maxlength: 15
+          },
+          description: {
+            noSpace: true,
+            required: true,
+            maxlength: 15
+          },
+          address: {
+            noSpace: true,
+            required: true,
+            maxlength: 30
+          },
+          description: {
+            noSpace: true,
+            required: true,
+            maxlength: 50
+          },
+          price: {
+            noSpace: true,
+            required: true,
+            maxlength: 50
+          },
+        },
+        messages: {
+
+          name: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Name should be 20 charcater"
+          },
+          jobtype: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Text name should be 15 charcater"
+          },
+          estmdtime: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Text should be 15 charcater"
+          },
+          expdate: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "text should be 15 charcater"
+          },
+          address: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Text should be 15 charcater"
+          },
+          description: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Text should be 50 charcater"
+          },
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

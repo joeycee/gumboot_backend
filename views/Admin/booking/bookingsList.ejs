@@ -1,0 +1,250 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1> Booking List</h1>
+    
+    </div>
+    <div class="section-body">
+      <div class="col-12 col-md-6 col-lg-12">
+        <div class="row">
+         
+          <div class="table-responsive  mt-3">
+            <table id="myTable" class="table table-hover table-md">
+              <thead>
+                <tr style="background-color: #ebf2f2;" >
+                  <th scope="col">S No.</th>
+                  <th scope="col">Employee</th>
+                  <th scope="col">Job Type</th>
+                  <th scope="col">Worker</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody class="table_data">
+                <% if(bookingdata.length != 0){%>
+                  <% bookingdata.forEach(function(data,i) { %>
+                    <tr>
+                      <td><%=1+i%></td>
+                      <td><%=data.userId ? data.userId.firstname : "User not available" %></td>
+                      <td><%=data.job_type ? data.job_type.name : "" %></td>
+                      <td><%=data.workerId ? data.workerId.firstname : "worker not assigned" %></td>
+                     
+                      <td>
+                        <img 
+                          src="<%= data.image && data.image[0] && data.image[0].url ? data.image[0].url : '/assets/img/demoimg.png' %>" 
+                          width="45px" 
+                          height="40px" 
+                          style="cursor:pointer;"
+                        >
+                      </td>
+                      
+                      <td>
+                        <select id="statuschange" class="statuschange" data-id="<%=data.id%>"
+                          <% if(data.job_status == '6' || data.job_status == '7') { %>
+                            disabled
+                          <% } %>
+                          
+                          <option value="0" <% if(data.job_status == 0) { %> selected <% } %>>Job open</option>
+                          <option value="1" <% if(data.job_status == 1) { %> selected <% } %>>Pending</option>
+                          <option value="2" <% if(data.job_status == 2) { %> selected <% } %>>Accepted</option>
+                          <option value="3" <% if(data.job_status == 3) { %> selected <% } %>>On going</option>
+                          <option value="4" <% if(data.job_status == 4) { %> selected <% } %>>Rejected</option>
+                          <option value="5" <% if(data.job_status == 5) { %> selected <% } %>>Cancelled</option>
+                          <option value="6" <% if(data.job_status == 6) { %> selected <% } %>>Completed</option>
+                          <option value="7" <% if(data.job_status == 7) { %> selected <% } %>>Job ended</option>
+
+                        </select>
+                      </td>
+                      <td>
+                        <a href="/viewBooking/<%=data._id%>" class="btn btn-sm bg-info"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <!-- <a href="/editBooking/<%=data._id%>" class="btn btn-sm bg-warning"><i class="fas fa-edit"></i></a> -->
+                        <button onclick="confirmDelete('<%=data._id%>')" class="btn btn-sm bg-danger"> <i class="fa fa-trash"></i> </button>
+                      </td>
+                    </tr>
+                  <%})%>
+                <%}%>
+              </tbody>
+              <tbody class="append_tbody">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+
+  function filterData(elem){
+    $.ajax({
+          type: "post",
+          url: "/filterData",
+          data: {status:elem.value},
+          success: function (result) {
+            // console.log(data);
+            // return
+              $(".table_data").addClass("d-none")
+              var html=``
+              result.forEach((data,i) => {
+                console.log(data,"lppplpllpplpl");
+                html+=`<tr>
+                          <td>${1+i}</td>
+                          <td>${data.userId ? data.userId.firstname : ""}</td>
+                        <td>${data.job_type ? data.job_type.name : "" }</td>
+                          <td>${data.workerId ? data.workerId.firstname : ""}</td>
+                     
+                          <td>
+                            <img src="${data.image}" width="45px" height="40px" type="submit" style="cursor:pointer;">
+                          </td>
+                          <td>
+                            <select onchange=changeStatus(this,'${data._id}') class="form-control statuschange" ${data.job_status == '2' || data.job_status == '4'?"disabled":""}"
+                            >
+                              <option value="0" ${data.job_status == 0? "selected":""}>Pending</option>
+                              <option value="1" ${data.job_status == 1?"selected":""}>On going</option>
+                              <option value="2" ${data.job_status == 2?"selected":""}>Completed</option>
+                              <option value="3" ${data.job_status == 3?"selected":""}>Completed</option>
+                              <option value="4" ${data.job_status == 4?"selected":""}>Completed</option>
+                              <option value="5" ${data.job_status == 5?"selected":""}>Completed</option>
+                              <option value="6" ${data.job_status == 6?"selected":""}>Completed</option>
+                              <option value="7" ${data.job_status == 7?"selected":""}>Completed</option>
+                            </select>
+                          </td>
+                          <td>
+                          <a href="/view_booking/${data._id}" class="btn btn-sm bg-info"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                          <a href="/edit_booking/${data._id}" class="btn btn-sm bg-warning"><i class="fas fa-edit"></i></a>
+                          <button onclick="confirmDelete('${data._id}')" class="btn btn-sm bg-danger"> <i class="fa fa-trash"></i> </button>
+                          </td>
+                        </tr>`
+                      })
+                      $(".append_tbody").html(html)
+                                 
+          }
+      });
+      
+  }
+
+  function changeStatus(elem,id){
+      var value = elem.value
+      
+      $.ajax({
+          type: "post",
+          url: "/bookingStatus",
+          data: {
+              id: id,
+              value
+          },
+          success: function (data) {
+              console.log(data)
+              window.location.reload();
+          },
+          error: function (err) {
+              console.log(err, "errrrrrrrrr")
+          }
+      });
+  }
+
+
+
+
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+
+  setTimeout(function () {
+    $("div.msg").fadeOut();
+  }, 2000);
+</script>
+
+<script>
+  $(document).ready(function () {
+    // alert("ready!");
+  });
+
+  function confirmDelete(id) {
+    console.log(">>>>>>>>done>>>>>>>>>>", id)
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-success'
+      },
+      buttonsStyling: true
+      
+    })
+
+    // console.log("------------------------------result------", id);
+
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((isConfirm) => {
+      // console.log(isConfirm)
+      // return
+      if (isConfirm.isConfirmed) {
+        // alert('asd')
+        $.ajax({
+          url: "/deleteBooking/:id",
+          type: 'delete',
+          data: {
+            id: id
+          },
+          success: function (result) { }
+        });
+        swalWithBootstrapButtons.fire(
+          'Deleted!',
+          'The user has been deleted .',
+          'success'
+        ).then(() => {
+          location.reload();
+        })
+      } else {
+        swalWithBootstrapButtons.fire(
+          'Cancelled',
+          'The user is safe :)',
+          'error'
+        )
+      }
+    })
+
+  }
+</script>
+
+
+<script>
+
+  console.log('====================script==========================');
+
+  $('.statuschange').on("change", (function () {
+      var id = $(this).attr('data-id');
+      var value = $(this).val();
+      $.ajax({
+          type: "post",
+          url: "/booking_status",
+          data: {
+              id: id,
+              value
+          },
+          success: function (data) {
+              console.log(data)
+              window.location.reload();
+          },
+          error: function (err) {
+              console.log(err, "errrrrrrrrr")
+          }
+      });
+  }));
+
+</script>

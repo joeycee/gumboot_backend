@@ -1,0 +1,50 @@
+<div class="main-sidebar"> 
+  <aside id="sidebar-wrapper">
+    <div class="sidebar-brand ">
+      <a href="/Dashboard">
+        <img src="../assets/img/logo.png" width="170px" height="80x" style="margin: 20px;" > <pre></pre>
+      </a>
+    </div>
+    <div class="sidebar-brand sidebar-brand-sm">
+      <a href="/Dashboard"> <b>JB</b></a>
+    </div> <br> 
+      <ul class="sidebar-menu" style="margin-top: -25px;">
+        <li class="<%=(title =='dashboard'?'active':'') %>"><a class="nav-link" href="/dashboard"><i class="fas fa-home" style="font-size: large;" ></i><span><b>Dashboard</b></span></a></li>
+           
+        <li class="<%=(title =='user_list'?'active':'') %>"><a class="nav-link" href="/user_list"><i class="fas fa-user-tie" style="font-size: large;" ></i><span><b>Employer</b></span></a></li>
+           
+        <!-- <li class="<%=(title =='worker_list'?'active':'') %>"><a class="nav-link" href="/worker_list"><i class="fas fa-users" style="font-size: large;" ></i><span><b>Worker</b></span></a></li> -->
+
+        <li class="<%=(title =='category_list'?'active':'') %>"><a class="nav-link" href="/category_list"><i class="fas fa-briefcase" style="font-size: large;" ></i><span><b> Category</b></span></a></li>
+
+        <!-- <li class="<%=(title =='tools_listing'?'active':'') %>"><a class="nav-link" href="/tools_listing"><i class="fas fa-tools" style="font-size: large;" ></i><span><b> Tools</b></span></a></li> -->
+        
+        <li class="<%=(title =='job_list'?'active':'') %>"><a class="nav-link" href="/job_list"><i class="fas fa-tractor" style="font-size: large;" ></i><span><b>Job List</b></span></a></li> 
+        
+        <li class="<%=(title =='bookingsList'?'active':'') %>"><a class="nav-link" href="/bookingsList"><i class="fas fa-table" style="font-size: large;" ></i><span><b>Booking</b></span></a></li>
+
+        <li class="<%=(title =='withdraw_list'?'active':'') %>"><a class="nav-link" href="/withdraw_list"><i class="fas fa-wallet" style="font-size: large;" ></i><span><b>Withdraw Requests</b></span></a></li>
+        
+        <!-- <li class="<%=(title =='profile_swap_list'?'active':'') %>"><a class="nav-link" href="/profile_swap_list"><i class="fas fa-dollar-sign" style="font-size: large;" ></i><span><b> Profile Swap</b></span></a></li> -->
+
+        <!-- <li class="<%=(title =='report_list'?'active':'') %>"><a class="nav-link" href="/report_list"><i class="fas fa-file" style="font-size: large;" ></i><span><b> Reports </b></span></a></li> -->
+        
+        <li class="<%=(title =='contact_list'?'active':'') %>"><a class="nav-link" href="/contact_list"><i class="fas fa-envelope" style="font-size: large;" ></i><span><b>Support</b></span></a></li>
+        
+        <li class="<%=(title =='faq_list'?'active':'') %>"><a class="nav-link" href="/faq_list"><i class="fas fa-question" style="font-size: large;" ></i><span><b>FAQ</b></span></a></li>
+        
+        <li class="<%=(title =='report_list'?'active':'') %>"><a class="nav-link" href="/report_list"><i class="fas fa-file" style="font-size: large;" ></i><span><b> Reports </b></span></a></li>
+        
+      
+        <li class="dropdown">
+          <a class="nav-link has-dropdown"><i class="fas fa-fire" style="font-size: large;"></i><span> <b>CMS </b></span></a>
+          <ul class="dropdown-menu">
+            <li class="<%=(title =='terms_condition'?'active':'') %>"><a class="nav-link" href="/terms_condition"><i class="fas fa-leaf" style="font-size: large;" ></i><span><b>Term & Condition</b></span></a></li>
+            <li class="<%=(title =='privacy_policy'?'active':'') %>"><a class="nav-link" href="/privacy_policy"><i class="fas fa-hands" style="font-size: large;" ></i><span><b>Privacy Policy</b></span></a></li>
+            <li class="<%=(title =='Aboutus'?'active':'') %>"><a class="nav-link" href="/Aboutus"><i class="fas fa-book" style="font-size: large;" ></i><span> <b>About Us</b></span></a></li>  
+          </ul>
+        </li>
+       
+      </ul>
+  </aside>
+</div>

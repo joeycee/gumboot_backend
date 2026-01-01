@@ -1,0 +1,49 @@
+<%- include('../common/header'); -%>
+
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Privacy Policy</h1>
+    </div>
+      <div class="section-body">
+        <div class="card">
+          <div class="card-body">
+            <form action="/Update_aboutus" method="post" >
+              <div class="form-group row mb-2">
+                <label class="col-form-label text-md-left col-10 col-md-1 col-lg-1">Title </label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="title" value="<%=data.title%>" class="form-control" disabled>
+                  </div>
+              </div>
+                  <div class="form-group row mb-2">
+                    <label class="col-form-label col-12 col-md-3 col-lg-3">Description</label>
+                    <div class="col-sm-12 col-md-12">
+                        <textarea class="editor" id="editor" name="description" class="form-control"
+                            required> <%=data.description%> </textarea> 
+                            <input type="hidden" name="id" value="<%=data.id%>"> <br>
+                            <button type="submit" class="btn btn-primary">Submit <i class="icon-arrow-right14 position-right"></i></button>
+                    </div>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </section>
+</div>
+
+  <%- include('../common/footer'); -%>
+
+  <script src="https://cdn.ckeditor.com/ckeditor5/35.2.0/classic/ckeditor.js"></script>
+
+<script>
+  ClassicEditor
+      .create(document.querySelector('#editor'))
+      .then(editor => {
+          console.log(editor);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+</script>

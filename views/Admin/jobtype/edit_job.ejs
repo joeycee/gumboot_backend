@@ -1,0 +1,234 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Update details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="/update_job" method="post" id="addForm" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="card-body">
+                  <div class="form-group col-12 floating-addon">
+                    <label> Job Title</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="job_title" value="<%=editjob.job_title%>" required>
+                    <input type="hidden" name="id" value="<%=editjob._id%>">
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                  </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label for="name">Job Type</label>
+                      <select name="job_type" id="" class="form-control">
+                        <%job_type.forEach(function(data,i) { %>
+                        <option value="<%=data.id%>"<%=data.id==editjob.job_type ? 'selected' : '' %>> <%=data.name%></option>
+                        <%})%>
+                      </select>
+                    </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label> Estimated Time</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-clock"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="est_time" value="<%=editjob.est_time%>" required>
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                  </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label> Expiry Date</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-table"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="exp_date" value="<%=editjob.exp_date%>" required>
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                  </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label> Price</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="price" value="<%=editjob.price%>" required>
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                  </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label> Description</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-pen"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="description" value="<%=editjob.description%>" required>
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                  </div> 
+                  <div class="form-group row mb-4">
+                    <label class="col-form-label text-md-right col-12 col-md-6 col-lg-6">Image</label>
+                    <div class="col-sm-12 col-md-12">
+                      <div class="row ">
+                        <% editjob?.image.forEach(function(image) { %>
+                          <div class="col-md-4 col-12 p-md-10 ">
+                            <img src="<%=image%>" class="vel_view" alt="" width="150px"
+                              height="150px" class="rounded-circle profile-widget-picture">
+                          </div>
+                        <% }) %>   
+                        
+                      </div>
+                    </div>
+                  </div><br>
+                    <div class="form-group">
+                      <div class="col-sm-12 col-md-12">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+          
+          job_title: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          job_type: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          est_time: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          exp_date: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+          description: {
+            required: true,
+            noSpace: true,
+            maxlength: 50
+          },
+          price: {
+            required: true,
+            noSpace: true,
+            maxlength: 10
+          },
+        },
+        messages: {
+
+          job_title: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Title should be 20 charcater"
+          },
+          job_type: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Job type should be 20 charcater"
+          },
+          est_time: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: " Estimated time should be 10 charcater"
+          },
+          exp_date: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Date should be 10 charcater"
+          },
+          description: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Description should be 50 charcater"
+          },
+          price: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Price should be 10 charcater"
+          },
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

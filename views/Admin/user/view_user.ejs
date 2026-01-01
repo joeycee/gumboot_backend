@@ -1,0 +1,217 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<style>
+  .form-row {
+    display: -ms-flexbox;
+    display: flex
+;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -34px;
+    margin-left: 11px;
+}
+</style>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Profile details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-4">
+                <div class="profile-widget-header text-center py-3">
+                  <p><b> Image </b> </p>
+                  <img alt="image" width="170" height="90" id="blah" src="<%=viewuser.image ?  viewuser.image : '/assets/img/defaultimage.jpg'%>">
+                </div>
+                <div class="profile-widget-header text-center py-3">
+                  <p> <b> Id proof </b></p>
+                  <img alt="image" width="170" height="90" id="blah" src="<%=viewuser.idproof ?  viewuser.idproof : '/assets/img/id.jpeg' %>">
+                </div>
+                <div class="profile-widget-header text-center py-3">
+                  <p> <b> Selfie </b></p>
+                  <img alt="image" width="170" height="90" id="blah" src="<%= viewuser.selfie ? viewuser.selfie : '/assets/img/defaultimage.jpg' %>">
+
+
+                </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-7">
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">First Name</label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="text" name="firstname" value="<%=viewuser.firstname%>" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Last Name</label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="text" name="lastname" value="<%=viewuser.lastname%>" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Email</label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="email" name="email" value="<%=viewuser.email%>" class="form-control" disabled>
+                    </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label class="col-form-label">Country Code</label>
+                    <input type="text" name="country_code" value="<%= viewuser.country_code %>" class="form-control" disabled>
+                  </div>
+                
+                  <div class="form-group col-md-8">
+                    <label class="col-form-label">Phone</label>
+                    <input type="text" name="phone" value="<%= viewuser.phone %>" class="form-control" disabled>
+                  </div>
+                </div>
+                
+              
+                <br>
+                <div class="form-group">
+                  <div class="col-sm-12 col-md-12">
+                    <a href="/user_list" class="btn btn-info">Back</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        
+      </div>
+    </div>
+  </section>
+  <div class="card-body">
+
+    <div class="section-header">
+      <h5>Posted Jobs</h5>
+    </div>
+  <div class="col-12 col-mt-5">
+    <div class="card-datatable">
+    <div class="table-responsive">
+      <table id="myTable" class="table table-hover table-md">
+        <thead>
+          <tr style="background-color: #ebf2f2;">
+            <th scope="col">S No.</th>
+              <th scope="col">Job Title</th>
+              <th scope="col">Job Type</th>
+              <th scope="col">Price(in $)</th>
+              <th scope="col">Est time</th>
+              <th scope="col">Image</th>
+              <th scope="col">Status</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <% if (userpostedjobs.length > 0) { %>
+            <% userpostedjobs.forEach(function(data, i) { %>
+              <tr>
+                <td><%= 1 + i %></td> 
+                <td><%= data?.job_title %></td>
+                <td><%= data?.job_type ? data.job_type.name : "" %></td>
+                <td><%= data?.price %></td> 
+                <td><%= data?.est_time %></td>
+                <td>
+                  <img src="<%= data.image[0].url %>" width="45px" height="40px" type="submit" style="cursor:pointer;">
+                </td>  
+                <%
+                    const statusMap = {
+                      1: "Approved",
+                      2: "Accepted",
+                      3: "On Going",
+                      4: "Cancelled",
+                      5: "Rejected",
+                      6: "Completed",
+                      7: "Job Ended"
+                    };
+                  %>
+                  <td><%= statusMap[data.job_status] || "Pending" %></td>
+
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center">No posted jobs available</td>
+            </tr>
+          <% } %>
+        </tbody>
+        
+      </table>
+    </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="card-body">
+    <div class="section-header">
+      <h5>Applied Jobs</h5>
+    </div>
+  <div class="col-12 col-mt-5">
+    <div class="card-datatable">
+    <div class="table-responsive">
+      <table id="myTable" class="table table-hover table-md">
+        <thead>
+          <tr style="background-color: #ebf2f2;">
+            <th scope="col">S No.</th>
+              <th scope="col">Job Title</th>
+              <th scope="col">Price(in $)</th>
+              <th scope="col">Est time</th>
+              <th scope="col">Exp Date</th>
+              <th scope="col">Job Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (userrequestedjobs.length > 0) { %>
+            <% userrequestedjobs.forEach(function(data, i) { %>
+              <tr>
+                <td><%= 1 + i %></td> 
+                <td><%= data?.jobId?.job_title %></td>
+                <td><%= data?.jobId?.price %></td> 
+                <td><%= data?.jobId?.est_time %></td>
+                <td><%= new Date(data?.jobId?.exp_date).toDateString() %></td>
+
+                <%
+                    const statusMap = {
+                      1: "Approved",
+                      2: "Accepted",
+                      3: "On Going",
+                      4: "Cancelled",
+                      5: "Rejected",
+                      6: "Completed",
+                      7: "Job Ended"
+                    };
+                  %>
+                  <td><%= statusMap[data?.jobId?.job_status] || "Pending" %></td>
+              
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="text-center">No applied jobs available</td>
+            </tr>
+          <% } %>
+        </tbody>
+        
+      </table>
+    </div>
+    </div>
+  </div>
+  </div>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+

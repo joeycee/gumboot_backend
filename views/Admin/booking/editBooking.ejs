@@ -1,0 +1,184 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Update details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card"> 
+      <form action="/updateBooking" method="post" id="addForm" enctype="multipart/form-data">
+       <div class="row mt-sm-4 justify-content-center ">
+          <div class="col-12 col-md-12 col-lg-4">
+            <div class="card profile-widget">
+              <div class="profile-widget-header text-center py-3">
+                <img alt="image" width="200" height="200" id="blah" src="<%=editdata.image%>" class="profile_img rounded-circle">
+              </div>
+                <div class="form-group col-12">
+                  <label> Update profile picture </label>
+                  <input type="file" name="image" accept="image/*" value="" id="imgInp" class="form-control">
+                </div>
+            </div>
+          </div>
+          <div class="col-12 col-md-12 col-lg-7">
+
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-4 col-lg-3">Job ID</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="" value="<%=editdata.id%>" class="form-control" disabled>
+                  </div>
+                </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label for="name">Employer Name</label>
+                      <select name="userId" id="" class="form-control">
+                        <%user.forEach(function(data,i) { %>
+                        <option value="<%=data.id%>"<%=data.id==editdata.userId ? 'selected' : '' %>> <%=data.firstname%></option>
+                        <%})%>
+                      </select>
+                    </div>
+                   
+                  <div class="form-group col-12 floating-addon">
+                    <label> Job Title </label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-briefcase"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="job_title" value="<%=editdata.job_title%>" required>
+                    <input type="hidden" name="id" value="<%=editdata._id%>">
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                  </div>
+                  <div class="form-group col-12 floating-addon">
+                    <label for="name">Job Type</label>
+                      <select name="job_type" id="" class="form-control">
+                        <%job_type.forEach(function(data,i) { %>
+                        <option value="<%=data.id%>"<%=data.id==editdata.job_type ? 'selected' : '' %>> <%=data.name%></option>
+                        <%})%>
+                      </select>
+                    </div>
+                    <div class="form-group col-12 floating-addon">
+                        <label for="name">Worker Name</label>
+                          <select name="workerId" id="" class="form-control">
+                            <%worker.forEach(function(data,i) { %>
+                            <option value="<%=data.id%>"<%=data.id==editdata.workerId ? 'selected' : '' %>> <%=data.firstname%></option>
+                            <%})%>
+                          </select>
+                        </div>
+                    <div class="form-group col-12 floating-addon">
+                      <label> Price </label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-dollar-sign" aria-hidden="true"></i>
+                          </div>
+                        </div>
+                        </div>
+                      <input type="text" class="form-control" name="price" oninput="this.value = this.value.replace(/[^0-9]/g, '');" maxlength="10" value="<%=editdata.price%>" required>
+                      <div class="invalid-feedback">
+                        Please fill in the name
+                      </div>
+                    </div> <br>
+                <div class="form-group">
+                  <div class="col-sm-12 col-md-12">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+
+
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+
+          jobtitle: {
+            noSpace: true,
+            required: true,
+            maxlength: 20
+          },
+          jobtype: {
+            noSpace: true,
+            required: true,
+          },
+          price: {
+            noSpace: true,
+            required: true,
+            maxlength: 10
+          },
+         
+        },
+        messages: {
+
+          jobtitle: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Title should be 15 charcater"
+          },
+          jobtype: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Job type should be 20 charcater"
+          },
+          price: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Amount should be 10 charcater"
+          }
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

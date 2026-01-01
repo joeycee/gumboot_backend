@@ -1,0 +1,77 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Withdraw Details</h1>
+
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="/withdraw_list" method="get" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-10 offset-lg-0">
+              <form action="" method="post" class="needs-validation" enctype="multipart/form-data" novalidate="">
+                <div class="card-body">
+
+                  <!-- User Name -->
+                  <div class="form-group col-12">
+                    <label>Account Holder Name</label>
+                    <input type="text" class="form-control" value="<%= withdrawData.userId?.firstname + ' ' + withdrawData.userId?.lastname %>" disabled>
+                  </div>
+
+                  <!-- Bank Name -->
+                  <div class="form-group col-12">
+                    <label>Bank Name</label>
+                    <input type="text" class="form-control" value="<%= withdrawData.bank_id?.bank_name || 'N/A' %>" disabled>
+                  </div>
+
+                  <!-- Account Number -->
+                  <div class="form-group col-12">
+                    <label>Account Number</label>
+                    <input type="text" class="form-control" value="<%= withdrawData.bank_id?.account_number || 'N/A' %>" disabled>
+                  </div>
+
+                  <!-- Amount -->
+                  <div class="form-group col-12">
+                    <label>Amount</label>
+                    <input type="text" class="form-control" value="<%= withdrawData.amount %>" disabled>
+                  </div>
+
+
+                  <!-- Status -->
+                  <div class="form-group col-12">
+                    <label>Status</label>
+                    <input type="text" class="form-control" value="<%= withdrawData.status == 0 ? 'Pending' : (withdrawData.status == 1 ? 'Approved' : 'Rejected') %>" disabled>
+                  </div>
+
+
+                  <!-- Back Button -->
+                  <div class="form-group">
+                    <div class="col-sm-12 col-md-12">
+                      <button type="submit" class="btn btn-primary">Back</button>
+                    </div>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>

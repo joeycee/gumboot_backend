@@ -1,0 +1,175 @@
+
+<%-include('../common/header');-%>
+<%-include('../common/sidebar');-%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1> Job List</h1>
+      <!-- <div class="section-header-breadcrumb">
+        <a href="/add_job" class="btn btn-sm " style="background-color: #07a3c0;" ><i class="fa fa-plus"> Add Job</i></a>
+      </div> -->
+    </div>
+    <div class="col-12 col-mt-5">
+      <div class="table-responsive">
+        <table id="myTable" class="table table-hover table-md">
+          <thead>
+            <tr style="background-color: #ebf2f2;">
+              <th scope="col">S No.</th>
+              <th scope="col">Job Title</th>
+              <th scope="col">Job Type</th>
+              <th scope="col">Price</th>
+              <th scope="col">Est time</th>
+              <th scope="col">Image</th>
+              <th scope="col">Status</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%jobdata.forEach(function(data,i) {%>
+              <tr>
+                <td><%=1+i%></td> 
+                <td> <%=data?.job_title%></td>
+                <td><%=data?.job_type ? data?.job_type?.name : "" %></td>
+                <td>$ <%=data?.price%></td> 
+                <td> <%=data?.est_time%></td>
+               
+                <td>
+                  <img 
+                    src="<%= data.image && data.image[0] && data.image[0].url ? data.image[0].url : 'assets/img/defaultimage.jpg' %>" 
+                    width="45px" 
+                    height="40px" 
+                    style="cursor:pointer;"
+                  >
+                </td>
+                
+                <td>
+                  <% if(data.status==1) { %>
+                    <button onclick="changeStatus(this)" id="userId_<%-data.id%>" class=" btn btn-sm btn-success status " data-id="<%=data._id%>" value="0">Active</button>
+                  <% } else { %>
+                  <button onclick="changeStatus(this)" id="userId_<%-data.id%>" class="btn btn-sm btn-danger status" data-id="<%=data._id%>" value="1" style="display: flex;">In-active</button>
+                  <% } %>
+                </td>
+                <td>
+                  <a href="/view_job/<%=data._id%>" class="btn btn-sm bg-info"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                  <!-- <a href="/edit_job/<%=data._id%>" class="btn btn-sm bg-warning"><i class="fas fa-edit"></i></a> -->
+                  <button onclick="confirmDelete('<%=data._id%>')" class="btn btn-sm bg-danger"> <i class="fa fa-trash"></i> </button>
+                </td> 
+              </tr>
+            <% })%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<%- include('../common/footer'); -%>
+
+<script>
+  $(document).ready(function () {
+    $('#myTable').DataTable();
+  });
+</script>
+
+<script>
+  setTimeout(function () {
+    $("div.msg").fadeOut();
+  }, 2000);
+</script>
+
+<script>
+  $(document).ready(function () {
+    // alert("ready!");
+  });
+
+  function confirmDelete(id) {
+    console.log(">>>>>>>>done>>>>>>>>>>", id)
+
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: 'btn btn-danger',
+        cancelButton: 'btn btn-success'
+      },
+      buttonsStyling: true
+      
+    })
+
+    // console.log("------------------------------result------", id);
+
+    swalWithBootstrapButtons.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((isConfirm) => {
+      // console.log(isConfirm)
+      // return
+      if (isConfirm.isConfirmed) {
+        // alert('asd')
+        $.ajax({
+          url: "/Delete_job/:id",
+          type: 'post',
+          data: {
+            id: id
+          },
+          success: function (result) { }
+        });
+        swalWithBootstrapButtons.fire(
+          'Deleted!',
+          'Job has been deleted .',
+          'success'
+        ).then(() => {
+          location.reload();
+        })
+      } else {
+        swalWithBootstrapButtons.fire(
+          'Cancelled',
+          'Job details are safe :)',
+          'error'
+        )
+      }
+    })
+
+  }
+</script>
+
+
+<script>
+  const changeStatus = (val) => {
+    console.log(val)
+    let id = val.getAttribute('data-id')
+    let value = val.getAttribute('value')
+    let elemID = val.getAttribute('id')
+    elemID = document.getElementById(elemID)
+
+    $.ajax({
+      type: "post",
+      url: "/job_status",
+      data: {
+        id: id,
+        value: value
+
+      },
+      success: function (data) {
+        if (data) {
+          elemID.setAttribute('value', 0)
+          elemID.innerText = `Active`
+          elemID.classList.remove('btn-danger')
+          elemID.classList.add('btn-success')
+        } else {
+          elemID.setAttribute('value', 1)
+          elemID.innerText = `IN-Active`
+          elemID.classList.remove('btn-success')
+          elemID.classList.add('btn-danger')
+        }
+        window.location.reload();
+      }
+    });
+  }
+
+</script>

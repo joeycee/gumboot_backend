@@ -1,0 +1,122 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Update details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="/update_serviceFee" id="addForm" method="post" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+           
+            <div class="col-12 col-md-12 col-lg-10 offset-lg-0 ">
+              <div class="card-body">
+                <!-- <div class="form-group col-12 floating-addon">
+                  <label> Employer service fee</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-coins"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="service_fee" value=" " required>
+                    
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                </div> -->
+                <br>
+                <div class="form-group col-12 floating-addon">
+                    <label> Worker service charges</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">
+                            <i class="fas fa-coins"></i>
+                          </div>
+                        </div>
+                      </div>
+                      <input type="number" class="form-control" name="service_charge" maxlength="10" value="<%=serviceFeeData.service_charge%>" required>
+                      <input type="hidden" name="_id" value="<%=serviceFeeData._id%>">
+                      <div class="invalid-feedback">
+                        Please fill in the name
+                      </div>
+                  </div>
+                  <br>
+                  <div class="form-group">
+                    <div class="col-sm-12 col-md-12">
+                      <button type="submit" class="btn btn-primary" >Save Changes</button>
+                    </div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+
+          service_charge: {
+            noSpace: true,
+            required: true,
+            maxlength: 10
+          }, 
+        },
+        messages: {
+          service_charge: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Name should be 10 charcater"
+          },
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

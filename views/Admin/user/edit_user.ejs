@@ -1,0 +1,224 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Update details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="/update_user" method="post" id="addForm" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-4">
+                <div class="profile-widget-header text-center py-3">
+                  <p> <b> Image </b></p>
+                  <img alt="image" width="150" height="80" id="blah" src="<%=edituser.image%>" >
+                </div>
+                <div class="profile-widget-header text-center py-3">
+                  <p> <b> Id proof </b></p>
+                  <img alt="image" width="150" height="80" id="blah" src="<%=edituser.idproof%>" >
+                </div>             
+                <div class="profile-widget-header text-center py-3">
+                  <p> <b> Selfie </b></p>
+                  <img alt="image" width="150" height="80" id="blah" src="<%=edituser.selfie%>" >
+                </div>
+            </div>
+            <div class="col-12 col-md-12 col-lg-7 offset-lg-0 ">
+              <div class="card-body">
+                <div class="form-group col-12 floating-addon">
+                  <label> First Name</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="firstname" value="<%=edituser.firstname%>" required>
+                    <input type="hidden" name="id" value="<%=edituser._id%>">
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label> Last Name</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-user"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="lastname" value="<%=edituser.lastname%>" required>
+                    <input type="hidden" name="id" value="<%=edituser._id%>">
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label> Email</label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-envelope"></i>
+                        </div>
+                      </div>
+                      <input type="email" class="form-control" name="email" value="<%=edituser.email%>" disabled>
+                      <div class="invalid-feedback">
+                        Please fill in the email
+                      </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 floating-addon">
+                  <label> Phone </label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-phone"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="phone" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" maxlength="12" value="<%=edituser.phone%>" required>
+                    <div class="invalid-feedback">
+                      Please fill in the name
+                    </div>
+                </div>
+                <!-- <div class="form-group col-12 floating-addon">
+                  <label> Location </label>
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <i class="fas fa-map-marker" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <input type="text" class="form-control" name="location" value="<%=edituser.location%>" required>
+                      <div class="invalid-feedback">
+                        Please fill in the name
+                      </div>
+                </div> -->
+               <br>
+                <div class="form-group">
+                  <div class="col-sm-12 col-md-12">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<style>
+  .error {
+color: red !important;
+}
+</style>
+
+<script>
+  $(document).ready(function() {
+
+    jQuery.validator.addMethod("noSpace", function(value, element) {
+        return value == '' || value.trim().length != 0;
+      },
+
+      jQuery.validator.addMethod("emailExt", function(value, element, param) {
+        return value.match(/^[a-zA-Z0-9_\.%\+\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}$/);
+      }, 'Your e-mail is wrong'),
+
+
+      $('form[id="addForm"]').validate({
+
+
+        keypress: function(element) {
+
+          var element_id = $(element).attr('id');
+          if (this.settings.rules[element_id].keypress !== false) {
+            $(element).valid();
+          }
+        },
+
+        rules: {
+          firstname: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          lastname: {
+            required: true,
+            noSpace: true,
+            maxlength: 20
+          },
+          email: {
+            required: true,
+            emailExt: true,
+          },
+         
+          phone: {
+            digits: true,
+            required: true,
+            noSpace: true,
+            minlength: 10,
+            maxlength: 12
+          },
+          location: {
+            required: true,
+            noSpace: true,
+            maxlength: 100
+          },
+         
+          
+        },
+        messages: {
+
+          firstname: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "First name should be 10 charcater"
+          },
+
+          lastname: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "First name should be 10 charcater"
+          },
+
+          email: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+           
+          },
+          phone: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "Phone number should be 10 charcater"
+          },
+          location: {
+            required: "This field is required.",
+            noSpace: "Space not allowed",
+            maxlength: "First name should be 100 charcater"
+          },
+         
+         
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      }));
+  });
+</script>

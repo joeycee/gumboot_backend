@@ -1,0 +1,102 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Job details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+            <div class="col-12 col-md-12 col-lg-12">
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Job Title</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="job_type" value="<%=viewjob?.job_title%>" class="form-control" disabled>
+                  </div>
+                </div> 
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Job Type</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="job_type" value="<%=viewjob?.job_type ? viewjob?.job_type.name : "" %>" class="form-control" disabled>
+                  </div>
+                </div> 
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Estimated Time</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="est_time" value="<%=viewjob?.est_time%>" class="form-control" disabled>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Expiry Date</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="exp_date" value="<%= viewjob?.exp_date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>" 
+                    class="form-control" disabled>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Price</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="price" value="$ <%=viewjob?.price%>" class="form-control" disabled>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Description</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="description" value="<%=viewjob?.description%>" class="form-control" disabled>
+                  </div>
+                </div> 
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-5 col-lg-3">Address</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="description" value="<%=viewjob?.address?.address%>" class="form-control" disabled>
+                  </div>
+                </div> 
+                <div class="form-group row mb-4">
+                  <label class="col-form-label text-md-right col-12 col-md-6 col-lg-6">Image</label>
+                  <div class="col-sm-12 col-md-12">
+                    <div class="row">
+                      <% viewjob?.image.forEach(function(image) { %>
+                        <div class="col-md-4 col-12 p-md-10">
+                          <img 
+                            src="<%= image.url ? image.url : '/assets/img/defaultimage.jpg' %>" 
+                            class="vel_view rounded-circle profile-widget-picture" 
+                            alt="" 
+                            width="150px" 
+                            height="150px"
+                          >
+                        </div>
+                      <% }) %>
+                    </div>
+                  </div>
+                </div>
+                
+                <br>         
+                <div class="form-group">
+                  <div class="col-sm-12 col-md-12">
+                    <a href="/job_list" class="btn btn-info">Back</a>
+                  </div>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+

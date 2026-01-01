@@ -1,0 +1,150 @@
+<%- include('../common/header'); -%>
+<%- include('../common/sidebar'); -%>
+
+<style>
+  .form-row {
+    display: -ms-flexbox;
+    display: flex
+;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -34px;
+    margin-left: 11px;
+}
+</style>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-header">
+      <h1>Worker details</h1>
+    </div>
+    <div class="section-body">
+      <div class="card">      
+        <form action="" method="post" enctype="multipart/form-data">
+          <div class="row mt-sm-4 justify-content-center ">
+
+            <div class="col-12 col-md-12 col-lg-4">
+              <div class="profile-widget-header text-center py-3">
+                <p><b> Image </b> </p>
+                <img alt="image" width="170" height="90" id="blah" src="<%=workerdata?.image %>">
+              </div>
+              <div class="profile-widget-header text-center py-3">
+                <p> <b> Id proof </b></p>
+                <img alt="image" width="170" height="90" id="blah" src="<%=workerdata?.idproof%>">
+              </div>
+              <div class="profile-widget-header text-center py-3">
+                <p> <b> Selfie </b></p>
+                <img alt="image" width="170" height="90" id="blah" src="<%=workerdata?.selfie%>">
+              </div>
+          </div>
+
+            <div class="col-12 col-md-12 col-lg-7">
+              <div class="card-body">
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-4 col-lg-3">First Name</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="firstname" value="<%=workerdata.firstname%>" class="form-control" disabled>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label text-md-right col-12 col-md-4 col-lg-3">Last Name</label>
+                  <div class="col-sm-12 col-md-12">
+                    <input type="text" name="lastname" value="<%=workerdata.lastname%>" class="form-control" disabled>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Email</label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="email" name="email" value="<%=workerdata.email%>" class="form-control" disabled>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-3">
+                      <label class="col-form-label">Country Code</label>
+                      <input type="text" name="country_code" value="<%= workerdata.country_code %>" class="form-control" disabled>
+                    </div>
+                  
+                    <div class="form-group col-md-8">
+                      <label class="col-form-label">Phone</label>
+                      <input type="text" name="phone" value="<%= workerdata.phone %>" class="form-control" disabled>
+                    </div>
+                  </div>
+                   <div class="form-group">
+                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Job Type</label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="text" name="" value="<%=workerdata.categoryId ? workerdata.categoryId.name : "skill not found" %>" class="form-control" disabled>
+                    </div>
+                  </div>
+                  <!-- <div class="form-group">
+                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Location </label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="text" name="location" value="<%=workerdata.location%>" class="form-control" disabled>
+                    </div>
+                  </div> -->
+                  <div class="form-group">
+                    <label class="col-form-label text-md-right col-12 col-md-3 col-lg-3">Bio </label>
+                    <div class="col-sm-12 col-md-12">
+                      <input type="text" name="bio" value="<%=workerdata.bio%>" class="form-control" disabled>
+                    </div>
+                  </div> <br>
+                  <div class="form-group">
+                    <div class="col-sm-12 col-md-12">
+                      <a href="/worker_list" class="btn btn-info" style="height:34px" >Back</a>
+                    </div>
+                  </div>
+                  
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<%- include('../common/footer'); -%>
+
+<script>
+  imgInp.onchange = evt => {
+    const [file] = imgInp.files
+    if (file) {
+      blah.src = URL.createObjectURL(file)
+    }
+  }
+</script>
+
+<script>
+  const changeStatus = (val) => {
+    console.log(val)
+    let id = val.getAttribute('data-id')
+    let value = val.getAttribute('value')
+    let elemID = val.getAttribute('id')
+    elemID = document.getElementById(elemID)
+
+    $.ajax({
+      type: "post",
+      url: "/view_worker_status",
+      data: {
+        id: id,
+        value: value
+
+      },
+      success: function (data) {
+        if (data) {
+          elemID.setAttribute('value', 0)
+          elemID.innerText = `Approved`
+          elemID.classList.remove('btn-danger')
+          elemID.classList.add('btn-success')
+        } else {
+          elemID.setAttribute('value', 1)
+          elemID.innerText = `Un-approved`
+          elemID.classList.remove('btn-success')
+          elemID.classList.add('btn-danger')
+        }
+        window.location.reload();
+      }
+    });
+  }
+
+</script>
