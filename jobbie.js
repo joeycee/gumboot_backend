@@ -1,79 +1,183 @@
-var createError = require('http-errors');
-var express = require('express');
-var session = require('express-session');
-var path = require('path');
-var mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const { Validator } = require('node-input-validator');
+/**
+ * jobbie.js (or app.js)
+ *
+ * ✅ Option A: API-first error handling (never tries to render EJS for /api/*)
+ * ✅ Removes express-flash (brings jade) and replaces with connect-flash
+ * ✅ Uses env vars for SESSION_SECRET + MONGO_URI + PORT
+ * ✅ Safer session defaults, correct proxy/cookie handling in production
+ * ✅ Keeps EJS + routes + socket.io exactly as before
+ */
+
+require("dotenv").config();
+
+const createError = require("http-errors");
+const express = require("express");
+const session = require("express-session");
+const flash = require("connect-flash");
+const path = require("path");
+const mongoose = require("mongoose");
 const fileupload = require("express-fileupload");
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const { v4: uuidv4 } = require('uuid');
-var jwt = require('jsonwebtoken');
-const stripe = require('stripe');
-require('dotenv').config();
-var FCM = require('fcm-node');
-let csc = require('country-state-city').default;
-let Country = require('country-state-city').Country;
-let State = require('country-state-city').State;
-let City = require('country-state-city').City;
-var cors = require('cors')
-const Swal = require('sweetalert2');
-var flash = require('express-flash');
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
+const cors = require("cors");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var apiRouter = require('./routes/api');
+// Routes
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const apiRouter = require("./routes/api");
 
-var app = express();
-var http = require("http").Server(app);
-var io = require("socket.io")(http);
+const app = express();
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 
+// -------------------------
+// env + safety checks
+// -------------------------
+const PORT = process.env.PORT || 4011;
+const MONGO_URI = process.env.MONGO_URI;
+const SESSION_SECRET = process.env.SESSION_SECRET || "dev-secret-change-me";
+
+if (!MONGO_URI) {
+  console.warn("⚠️ MONGO_URI missing in .env (mongoose connect will fail)");
+}
+if (!process.env.SESSION_SECRET) {
+  console.warn("⚠️ SESSION_SECRET missing in .env (using fallback dev secret)");
+}
+
+// If behind nginx / load balancer in prod
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
+// -------------------------
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// -------------------------
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(cors())
-app.use(fileupload({
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB per file
-  abortOnLimit: true,
-  createParentPath: true,
-  safeFileNames: true,
-  preserveExtension: true
-}));
-app.use(express.urlencoded({ extended: false }));
+// -------------------------
+// middleware
+// -------------------------
+app.use(logger("dev"));
+app.use(cors());
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ extended: false, limit: "2mb" }));
+
+app.use(
+  fileupload({
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB per file
+    abortOnLimit: true,
+    createParentPath: true,
+    safeFileNames: true,
+    preserveExtension: true,
+  })
+);
+
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 24 * 60 * 60 * 365 * 1000,
-  },
-}));
+app.use(express.static(path.join(__dirname, "public")));
+
+// -------------------------
+// sessions + flash (must be in this order)
+// -------------------------
+app.use(
+  session({
+    name: "sid",
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false, // ✅ better than true
+    cookie: {
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+    },
+  })
+);
 
 app.use(flash());
 
-main().catch(err => console.log(err));  
+// Optional: makes flash available in EJS without repeating code everywhere
+app.use((req, res, next) => {
+  res.locals.flash = req.flash();
+  next();
+});
 
-async function main() {
-  await mongoose.connect(process.env.MONGO_URI);
-  console.log("db connected")
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
-}
+// -------------------------
+// mongo
+// -------------------------
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log("db connected"))
+  .catch((err) => console.error("Mongo connection error:", err));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/api', apiRouter);
+// -------------------------
+// routes
+// -------------------------
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+app.use("/api", apiRouter);
 
+// -------------------------
+// 404 handler (Option A)
+// - /api/* returns JSON 404
+// - non-api falls through to normal error handling
+// -------------------------
+app.use((req, res, next) => {
+  const isApi = req.originalUrl.startsWith("/api");
+  if (isApi) {
+    return res.status(404).json({
+      success: false,
+      code: 404,
+      message: "Not Found",
+      path: req.originalUrl,
+    });
+  }
+  next(createError(404));
+});
 
-const port = process.env.PORT || 4011
-const socket = require("./socket/socket")(io);
-http.listen(port, () => {
-  console.log(`server listening on ${port}`)
-}) 
+// -------------------------
+// error handler (Option A)
+// - /api/* always returns JSON (never tries to render views/error.ejs)
+// - non-api can render EJS (if you have views/error.ejs), otherwise falls back
+// -------------------------
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  const status = err.status || 500;
+  const isApi = req.originalUrl.startsWith("/api");
+
+  if (isApi) {
+    return res.status(status).json({
+      success: false,
+      code: status,
+      message: err.message || "Server error",
+      path: req.originalUrl,
+      // include stack only in dev
+      ...(process.env.NODE_ENV === "production" ? {} : { stack: err.stack }),
+    });
+  }
+
+  // Non-API: try render error.ejs, otherwise fallback to plain text
+  try {
+    return res.status(status).render("error", {
+      message: err.message,
+      error: process.env.NODE_ENV === "production" ? {} : err,
+    });
+  } catch (e) {
+    return res.status(status).send(err.message || "Server error");
+  }
+});
+
+// -------------------------
+// sockets
+// -------------------------
+require("./socket/socket")(io);
+
+// -------------------------
+// start
+// -------------------------
+http.listen(PORT, () => {
+  console.log(`server listening on ${PORT}`);
+});
 
 module.exports = app;

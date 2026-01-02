@@ -12,8 +12,16 @@ const user_model = require("../model/Admin/user_model");
 const review_model = require("../model/Admin/review_model");
 const notification_model = require("../model/Admin/notification_model");
 
-const stripe = require("stripe")(process.env.SECRETKEY);
+const Stripe = require("stripe");
 
+// Support either env var name
+const STRIPE_KEY = process.env.STRIPE_SECRET_KEY || process.env.SECRETKEY;
+
+// ✅ Stripe becomes optional (won’t crash local dev)
+const stripe = STRIPE_KEY ? Stripe(STRIPE_KEY) : null;
+if (!stripe) {
+  console.warn("⚠️ Stripe disabled (missing STRIPE_SECRET_KEY/SECRETKEY). Payments/customer creation will be skipped.");
+}
 const SECRET_KEY = process.env.SECRETKEY;
 const PUBLISH_KEY = process.env.PUBLISHABLEKEY;
 const JWT_SECRET = process.env.jwtSecretKey;
@@ -342,11 +350,13 @@ module.exports = {
   // Stripe helpers
   // ------------------------------------------------------------
   strieCustomer: async (email) => {
+    if (!stripe) return ""; // ✅ no stripe in local, just store empty
     const customer = await stripe.customers.create({ email });
-    return customer ? customer.id : "0";
+    return customer.id;
   },
 
   stripeToken: async (req) => {
+    if (!stripe) throw new Error("Stripe not configured");
     const token = await stripe.tokens.create({
       card: {
         number: req.body.card_number,
@@ -364,6 +374,7 @@ module.exports = {
 
   // ⚠️ This was in your old helper. Note: Stripe amounts are usually in cents (*100), not *1000.
   stripePayment: async (req) => {
+    if (!stripe) throw new Error("Stripe not configured");
     const charge = await stripe.charges.create({
       amount: req.body.total * 1000, // consider changing to * 100 if total is in dollars
       currency: "usd",
