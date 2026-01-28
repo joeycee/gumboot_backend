@@ -5,6 +5,7 @@ const user_model = require('../../model/Admin/user_model');
 const job_model = require('../../model/Admin/job_model');
 let addCost_model = require('../../model/Admin/addCost_model')
 let serviceFees = require('../../model/Admin/service_fee_model')
+let notification_model = require('../../model/Admin/notification_model')
 
 module.exports = {
 
@@ -63,6 +64,41 @@ module.exports = {
           );
         }
 
+      }
+
+      const sender = await user_model.findOne({ _id: userId });      
+      const receiver = await user_model.findById(jobData.workerId);
+
+      if (receiver && receiver.device_token) {
+        let payload = {};
+        payload = sender;
+        payload.title = "Payment Sent";
+        payload.message = `${sender.firstname} has sent the payment (this may take a few days)`;
+        payload.jobId = jobId;
+        payload.workerId = receiver._id
+
+        let save_noti_data = {};
+        save_noti_data.receiver = receiver._id;
+        save_noti_data.sender = sender._id;
+        save_noti_data.type = 1;
+        save_noti_data.jobId = jobId;
+        save_noti_data.message = payload.message;
+
+        await notification_model.create(save_noti_data);
+        
+        let objS = {
+          device_type: receiver.device_type,
+          device_token: receiver.device_token,
+          sender_name: sender.firstname,
+          sender_image: sender.image,
+          message: payload.message,
+          workerId: receiver._id,
+          type: 5,
+          payload,
+          save_noti_data
+        }
+
+        await helper.send_push_notification(objS);
       }
 
       return helper.success(res, "Transactions", { transactionstatus, jobPrice_addCost, workerFinalAmount, adminCharges })
