@@ -3,6 +3,9 @@ var path = require('path');
 const Users = require('../model/Admin/user_model');
 const Messages = require('../model/socket/message');
 const Socketuser = require('../model/socket/socketusers')
+const fs = require("fs");
+
+
 
 module.exports = {
   create_time_stamp: async function () {
@@ -11,27 +14,42 @@ module.exports = {
   },
 
   image_base_64: async function (get_message, extension_data) {
+    // Validate extension
+    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    const extension = extension_data.toLowerCase().replace(/[^a-z]/g, '');
+    
+    if (!allowedExtensions.includes(extension)) {
+      throw new Error('Invalid file extension');
+    }
+
     var image = get_message;
     var data = image.replace(/^data:image\/\w+;base64,/, '');
-    var extension = extension_data;
-    var filename = Math.floor(Date.now() / 1000) + '.' + extension;
-    var base64Str = data;
-    upload_path = path.join(__dirname, '../public/uploads/chat/' + filename);
-    if (extension) {
-      fs.writeFile(
-        upload_path,
-        base64Str,
-        {
-          encoding: 'base64',
-        },
-        function (err) {
-          if (err) {
-            console.log(err);
-          }
-        }
-      );
+    
+    // Validate base64 and check size
+    if (!data || data.length > 5242880) { // 5MB limit
+      throw new Error('Invalid or oversized image');
     }
-    return filename;
+    
+    var filename = `${Math.floor(Date.now() / 1000)}.${extension}`;
+    const upload_path = path.join(__dirname, "../public/uploads/chat/", filename);
+    
+    // Verify path is within expected directory
+    const normalizedPath = path.normalize(upload_path);
+    const uploadsDir = path.normalize(path.join(__dirname, "../public/uploads/chat/"));
+    
+    if (!normalizedPath.startsWith(uploadsDir)) {
+      throw new Error('Invalid file path');
+    }
+
+    return new Promise((resolve, reject) => {
+      fs.writeFile(upload_path, data, { encoding: 'base64' }, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(filename);
+        }
+      });
+    });
   },
 
   get_user_details_for_push: async function (get_data) {
@@ -205,6 +223,8 @@ module.exports = {
       as: 'senderSocketUser',
     },
   },
+
+  { $sort: { createdAt: 1 } },
 
   {
     $group: {

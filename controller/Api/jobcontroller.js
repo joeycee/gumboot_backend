@@ -9,6 +9,8 @@ const user_model = require('../../model/Admin/user_model');
 const review_model = require('../../model/Admin/review_model')
 const addCost_model = require('../../model/Admin/addCost_model');
 const { default: mongoose } = require('mongoose');
+
+
 var postmark = require("postmark");
 
 module.exports = {
@@ -746,7 +748,7 @@ module.exports = {
             const worker = await user_model.findById(jobdataa.workerId);
             if (job_status == 7) {
 
-                var client = new postmark.ServerClient("a6913d7e-021b-41e9-b470-30b264c0d1b5");
+                var client = new postmark.ServerClient(process.env.POSTMARK_SERVER_TOKEN);
 
                 let html = ` 
                         <!DOCTYPE html>
@@ -846,7 +848,7 @@ module.exports = {
                 `;
 
                 client.sendEmail({
-                    From: 'joe@jobbie.co.nz',
+                    From: process.env.POSTMARK_FROM_EMAIL,
                     To: worker.email,
                     Subject: 'Job completed',
                     HtmlBody: html,
@@ -957,7 +959,7 @@ module.exports = {
                 `;
 
                 client.sendEmail({
-                    From: 'joe@jobbie.co.nz',
+                    From: POSTMARK_FROM_EMAIL,
                     To: users.email,
                     Subject: 'Job completed',
                     HtmlBody: html2,

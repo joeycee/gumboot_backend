@@ -22,9 +22,16 @@ const logger = require("morgan");
 const cors = require("cors");
 
 // Routes
-const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
-const apiRouter = require("./routes/api");
+// Admin panel (EJS)
+app.use("/admin", indexRouter);
+
+
+// API (JSON)
+app.use("/api", apiRouter);
+
+// Optional: root endpoint
+app.get("/", (req, res) => res.send("OK"));
+
 
 const app = express();
 const http = require("http").Server(app);
@@ -36,6 +43,11 @@ const io = require("socket.io")(http);
 const PORT = process.env.PORT || 4011;
 const MONGO_URI = process.env.MONGO_URI;
 const SESSION_SECRET = process.env.SESSION_SECRET || "dev-secret-change-me";
+
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map(s => s.trim())
+  .filter(Boolean);
 
 if (!MONGO_URI) {
   console.warn("⚠️ MONGO_URI missing in .env (mongoose connect will fail)");
@@ -59,7 +71,15 @@ app.set("view engine", "ejs");
 // middleware
 // -------------------------
 app.use(logger("dev"));
-app.use(cors());
+app.use(cors({
+  origin: function (origin, cb) {
+    // allow server-to-server / curl / Postman (no origin header)
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: false, limit: "2mb" }));
 
