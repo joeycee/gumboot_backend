@@ -6,6 +6,7 @@
  * ✅ Uses env vars for SESSION_SECRET + MONGO_URI + PORT
  * ✅ Safer session defaults, correct proxy/cookie handling in production
  * ✅ Keeps EJS + routes + socket.io exactly as before
+ * ✅ All routers properly imported
  */
 
 require("dotenv").config();
@@ -21,17 +22,12 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const cors = require("cors");
 
-// Routes
-// Admin panel (EJS)
-app.use("/admin", indexRouter);
-
-
-// API (JSON)
-app.use("/api", apiRouter);
-
-// Optional: root endpoint
-app.get("/", (req, res) => res.send("OK"));
-
+// -------------------------
+// Import routers
+// -------------------------
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const apiRouter = require("./routes/api");
 
 const app = express();
 const http = require("http").Server(app);
@@ -133,8 +129,16 @@ mongoose
 // -------------------------
 // routes
 // -------------------------
-app.use("/", indexRouter);
+// Optional: root endpoint
+app.get("/", (req, res) => res.send("OK"));
+
+// Admin panel (EJS)
+app.use("/admin", indexRouter);
+
+// Users routes
 app.use("/users", usersRouter);
+
+// API (JSON)
 app.use("/api", apiRouter);
 
 // -------------------------
