@@ -1,14 +1,3 @@
-/**
- * jobbie.js (or app.js)
- *
- * ✅ Option A: API-first error handling (never tries to render EJS for /api/*)
- * ✅ Removes express-flash (brings jade) and replaces with connect-flash
- * ✅ Uses env vars for SESSION_SECRET + MONGO_URI + PORT
- * ✅ Safer session defaults, correct proxy/cookie handling in production
- * ✅ Keeps EJS + routes + socket.io exactly as before
- * ✅ All routers properly imported
- */
-
 require("dotenv").config();
 
 const createError = require("http-errors");
@@ -64,7 +53,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // -------------------------
-// middleware
+// middleware (MUST COME BEFORE ROUTES!)
 // -------------------------
 app.use(logger("dev"));
 app.use(cors({
@@ -100,7 +89,7 @@ app.use(
     name: "sid",
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: false, // ✅ better than true
+    saveUninitialized: false,
     cookie: {
       maxAge: 365 * 24 * 60 * 60 * 1000, // 1 year
       httpOnly: true,
@@ -127,7 +116,7 @@ mongoose
   .catch((err) => console.error("Mongo connection error:", err));
 
 // -------------------------
-// routes
+// routes (AFTER all middleware!)
 // -------------------------
 // Optional: root endpoint
 app.get("/", (req, res) => res.send("OK"));
@@ -165,7 +154,10 @@ app.use((req, res, next) => {
 // - non-api can render EJS (if you have views/error.ejs), otherwise falls back
 // -------------------------
 app.use((err, req, res, next) => {
-  console.error(err);
+  // Only log actual errors (500s), not 404s
+  if (err.status !== 404) {
+    console.error(err);
+  }
 
   const status = err.status || 500;
   const isApi = req.originalUrl.startsWith("/api");
