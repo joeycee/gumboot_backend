@@ -7,6 +7,7 @@
     "start": "node jobbie.js"
   },
   "dependencies": {
+    "aws-sdk": "^2.1693.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "connect-flash": "^0.1.1",
@@ -28,6 +29,8 @@
     "latest": "^0.2.0",
     "mongoose": "^7.5.0",
     "morgan": "~1.9.1",
+    "multer": "^2.0.2",
+    "multer-s3": "^3.0.1",
     "node-input-validator": "^4.5.1",
     "nodemailer": "^7.0.12",
     "nodemon": "^2.0.22",

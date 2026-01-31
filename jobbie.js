@@ -148,6 +148,11 @@ app.use((req, res, next) => {
   next(createError(404));
 });
 
+// CDN Digital ocean
+
+app.use("/api", require("./routes/upload"));
+
+
 // -------------------------
 // error handler (Option A)
 // - /api/* always returns JSON (never tries to render views/error.ejs)
